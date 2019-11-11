@@ -17,7 +17,7 @@ Firebase offers very cost effective pricing. It is really free to get started fo
 https://codersloth.github.io/ngElementCommentsDemo/
 
 ## How to build it 
-If you know the Angular then dive into the code right away. Its very simple.
+If you know Angular then dive into the code right away. Its very simple.
 
 If you don't know the Angular don't worry. You don't have to write any code. It's just copy, pasting and running some commands.
 
