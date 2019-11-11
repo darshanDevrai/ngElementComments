@@ -1,0 +1,36 @@
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<div class="container">
+        <div>&nbsp;</div>
+    <div style=" margin:10px !important;">
+
+        <div *ngIf="showError" style="width:100% !important">
+                <app-error-component [errorMsg]="errMsg"
+                    [time]="5" (closeError)="closeError($event)" class="errorClass"
+                ></app-error-component>
+        </div>
+
+        
+        
+        <div *ngIf="noOfComments" > 
+            <div >
+                <strong>{{noOfComments}} comment<span *ngIf="noOfComments > 1">s</span></strong>
+            </div>
+            
+        </div>
+        <mat-divider></mat-divider>
+        <app-auth></app-auth>
+        <app-add-comment *ngIf="commentDocUid" 
+            [commentDocUid]="commentDocUid"></app-add-comment>
+
+        <app-comments-list *ngIf="commentDocUid" 
+        [commentDocUid]="commentDocUid" 
+        [noOfComments]="noOfComments"
+            (noOfCommentsChanged)="noOfCommentsChanged($event)"></app-comments-list>
+
+
+    </div>
+    <div>&nbsp;</div>
+    
+    
+</div>

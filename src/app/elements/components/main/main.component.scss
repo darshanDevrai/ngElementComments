@@ -1,0 +1,84 @@
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+.container {
+  width:100%;
+  height:auto;
+  border-radius: 5px;
+}
+
+.rightSide {
+    width:100%;
+   margin-left:10px;
+}
+
+.flexRow{
+  display: flex;
+  flex-direction: row;
+} 
+
+.flexRowCenter{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.flexRowSpcBet{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.commentAvatar {
+    width:48px;
+    height:48px;
+    object-fit: cover;
+    background-color: lightgray;
+    // border: none;
+    margin-top:5px;
+    // padding: auto !important;
+    border-radius: 5px;
+}
+
+.commentAvatarSmall {
+    width:35px;
+    height:35px;
+    // object-fit: cover;
+    // background-color: lightgray;
+    // // border: none;
+    // margin-top:5px;
+    // padding: auto !important;
+}
+.innerDiv {
+  text-overflow: wrap;
+  -ms-word-break: break-all;
+  word-break: break-all;
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+
+$icon-small-container-size: 30px;
+$icon-small-size: 18px;
+
+.mat-icon-button.small {
+  width: $icon-small-container-size;
+  height: $icon-small-container-size;
+  line-height: $icon-small-container-size;
+
+  .mat-icon, .mat-icon-button i {
+    line-height: $icon-small-size;
+  }
+
+  .mat-icon {
+    width: $icon-small-size;
+    height: $icon-small-size;
+  }
+
+  .material-icons {
+    font-size: $icon-small-size;
+  }
+}
+
+
+
+
+

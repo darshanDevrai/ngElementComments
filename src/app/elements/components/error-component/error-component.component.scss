@@ -1,0 +1,14 @@
+
+.errClass{
+    position: fixed;
+    z-index: 999;
+    bottom: 20px;
+    left: 50%;
+    margin-left: -150px;
+    background-color: red;
+    color:white;
+    padding:20px;
+    width: 300px;
+    border-radius: 5px;
+    cursor: pointer
+}

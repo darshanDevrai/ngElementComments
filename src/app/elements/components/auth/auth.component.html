@@ -1,0 +1,40 @@
+
+
+<div>
+    <div *ngIf="_user; then authenticated else guest">
+        <!-- template will replace this div -->
+    </div>
+    
+    <!-- User NOT logged in -->
+    <ng-template #guest>
+        <div >
+            <div class="flexRowSpcBet">
+                <h3 >Hello, GUEST. Please login to join the discussion...
+                </h3>
+                <div class="logInLogOutButton">
+                    <button mat-raised-button (click)="signIn()" class="logInButton">
+                        Login  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/32px-Google_%22G%22_Logo.svg.png">
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </ng-template>
+    
+    
+    <!-- User logged in -->
+    <ng-template #authenticated>
+        <div *ngIf="_user as user">
+            <div class="flexRowSpcBet">
+                <h3>Hello, {{ user.displayName }}</h3>
+                <div class="logInLogOutButton">
+                        <button mat-raised-button (click)="signOut()">Logout</button>
+                </div>
+                    
+            </div>
+            
+        </div>
+    </ng-template>
+</div>
+
+

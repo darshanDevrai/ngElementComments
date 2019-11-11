@@ -1,0 +1,150 @@
+
+
+<div *ngIf="noOfReplies != 0 && replies.length == 0" class="flexRowCenter">
+        <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner>
+</div>
+
+<div *ngFor="let reply of replies;let replyIndex = index" style="margin-top:5px">
+    <div class="flexRow" >
+        <div > 
+            <div *ngIf="!reply.authorPhotoURL"   >
+                <img class="commentAvatar commentAvatarSmall" 
+                    src="https://i.imgur.com/Gakh0MN.png" >
+            </div>
+            <div *ngIf="reply.authorPhotoURL">
+                    <img  class="commentAvatar commentAvatarSmall"  
+                    [src]="reply.authorPhotoURL" > 
+            </div>
+        </div>
+
+        <div class="rightSide">
+            <div class="flexRow" style="margin-top:5px;">
+                <div>
+                    <strong>{{reply.author}}</strong>
+                </div>
+                <div style="color:gray;margin:0px 5px;">
+                    To: {{reply.replyTo}}
+                </div>
+                <span style="margin:0px 5px;">&middot; </span>
+                
+                <div style="color:gray">
+                    <span *ngIf="!reply.localTime" class="timestampSpan">{{reply.timeStamp.seconds * 1000 | timeAgo}} </span>
+                    <span *ngIf="reply.localTime" class="timestampSpan">{{reply.localTime | timeAgo }} </span>  
+                    <span *ngIf="reply.updatedAt" class="timestampSpan">&middot; edited </span> 
+                </div>
+                
+            </div>
+
+            <div *ngIf="!editReplyFlag[replyIndex]" style="margin-top:5px" >
+                <div class="innerDiv" [innerHtml]="reply.replyBodyHtml"></div>
+            </div>
+
+            <div *ngIf="editReplyFlag[replyIndex]" style="margin-top:5px" >
+                <app-comment-input 
+                    (repToRepValueChange)="repToRepValueChange($event)"
+                    [initData]="updateReplyBody"
+                    [placeholder]="'Add a reply...'"
+                    [isFor]="'repToRep'">
+                </app-comment-input>
+
+                <div class="commentButton" >
+                    <button mat-raised-button color="primary" [disabled]="disableUpdateReplyButton"
+                        (click)="updateReply(replyIndex)" >update</button>
+                    <button mat-raised-button color="primary" [disabled]="disableUpdateReplyButton"  style="margin-left:10px"
+                        (click)="cancelUpdateReply(replyIndex)" >cancel</button>
+                </div>
+            </div>
+
+            <div class="flexRowSpcBet">
+                <div class="flexRow">
+                    <!-- like buttons -->
+                    <div style="margin-right:10px">
+                        <span style="color:gray; font-size:16px">{{reply.replyLikes}}</span>
+                        <!-- <span style="color:gray">{{reply.replyLikes}}</span> -->
+                        <button *ngIf="reply.userLiked ; else notLikedReply; "  (click)="(unLikeReplyClicked( replyIndex))"  mat-icon-button class="small">
+                            <mat-icon color="primary">thumb_up_alt</mat-icon>
+                        </button> 
+                        <ng-template  #notLikedReply >
+                            <button  (click)="(likeReplyClicked( replyIndex))"  mat-icon-button class="small">
+                            <mat-icon >thumb_up_alt</mat-icon>
+                            </button> 
+                        </ng-template>
+                    </div>
+
+                    <!-- reply buttons -->
+                    <div>
+                        <button *ngIf="reply.docId != innerReplyUid" (click)="innerReplyClicked(reply.docId)"   mat-icon-button class="small">
+                            <mat-icon >reply</mat-icon>
+                        </button>
+                        <button *ngIf="reply.docId == innerReplyUid" (click)="innerReplyClicked(false)"   mat-icon-button class="small">
+                            <mat-icon >reply</mat-icon>
+                        </button>
+                    </div>
+
+                </div>
+                <!-- delete button -->
+                <div *ngIf="_user">
+                    <div *ngIf="reply.authorId == _user.uid" >
+                        <div *ngIf="deletingFlag[replyIndex] !== true" class="flexRow"> 
+                            <div (click)="editReply(replyIndex)" style="cursor:pointer;color:gray">Edit</div>
+                            <div (click)="deleteReply( replyIndex)" style="cursor:pointer;margin-left:10px;color:gray">Delete</div>
+                        </div>
+                        <div *ngIf="deletingFlag[replyIndex] === true">
+                            Deleting...
+                        </div>
+                        
+                    </div>
+                </div>
+
+            </div>
+
+            <div *ngIf="reply.docId === innerReplyUid">
+                <div class="flexRow">
+                    <div > 
+                        <div *ngIf="!_user">
+                            <img class="commentAvatar commentAvatarSmall" 
+                                src="https://i.imgur.com/Gakh0MN.png" >
+                        </div>
+                        <div *ngIf="_user">
+                                <img *ngIf="_user.photoURL"  class="commentAvatar commentAvatarSmall" 
+                                [src]="_user.photoURL" ghostImg> 
+                        </div>
+                    </div>
+                    <div class="rightSide">
+                        <div >
+                            <app-comment-input 
+                                (inRepValueChange)="inRepValueChange($event)"
+                                [placeholder]="'Add a reply...'"
+                                [isFor]="'inRep'">
+
+                            </app-comment-input>
+    
+                                <div class="commentButton" >
+                                <button mat-raised-button color="primary" [disabled]="disableInnerReplyButton"
+                                    (click)="addReplyToReplyBody(replyIndex)" >Reply</button>
+                                <button mat-raised-button color="primary" [disabled]="disableInnerReplyButton" style="margin-left:10px"
+                                    (click)="cancelInnerReply()" >cancel</button>
+                                </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div *ngIf="loadMoreReplies == true" style="margin-top:5px">
+
+    <div >
+        <button mat-stroked-button  (click)="showMoreReplies()">
+            Show more replies
+        </button>
+    </div>
+</div>
+<div *ngIf="loadMoreReplies == 'loading'" class="flexRowCenter">
+    <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner>
+</div>

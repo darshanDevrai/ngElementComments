@@ -1,0 +1,30 @@
+
+
+<div class="flexRow">
+    <div>
+        <div *ngIf="!_user"   >
+            <img class="commentAvatar" 
+                src="https://i.imgur.com/Gakh0MN.png" >
+        </div>
+        <div *ngIf="_user">
+                <img *ngIf="_user.photoURL"  class="commentAvatar" 
+                [src]="_user.photoURL" ghostImg> 
+        </div>
+            
+    </div>
+        
+    <div class="rightSide">
+        <div >
+            <app-comment-input #myInput (comValueChange)="comValueChange($event)"
+                                (inputFocused)="inputFocused($event)"
+                                [isFor]="'com'"
+            > </app-comment-input>
+        </div>
+        <div class="commentButton" *ngIf="showButton">
+                <button mat-raised-button color="primary" [disabled]="disableCommentButton"
+                    (click)="addComment()" >Comment</button>
+                <button style="margin-left:10px" mat-raised-button color="primary" [disabled]="disableCommentButton"
+                    (click)="cancelTopComment()" >Cancel</button>
+        </div>
+    </div>
+</div>

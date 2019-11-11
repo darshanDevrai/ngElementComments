@@ -1,0 +1,152 @@
+
+
+
+<div *ngIf="noOfComments != 0 && comments.length == 0" class="flexRowCenter">
+    <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner>
+</div>
+
+
+<div style="margin-top:5px;margin-bottom:15px"  *ngFor="let comment of comments  ;let comIndex = index" >
+    <div class="flexRow">
+        <div > 
+            <div *ngIf="!comment.authorPhotoURL"   >
+                <img class="commentAvatar" 
+                    src="https://i.imgur.com/Gakh0MN.png" >
+            </div>
+            <div *ngIf="comment.authorPhotoURL">
+                    <img  class="commentAvatar" 
+                    [src]="comment.authorPhotoURL" > 
+            </div>
+
+        </div>
+        <div class="rightSide">
+            <div class="flexRow" style="margin-top:5px;">
+                <div>
+                    <strong>{{comment.author}}</strong>
+                </div>
+                <span style="margin:0px 5px;">&middot; </span>
+                
+                <div style="color:gray">
+                    <span *ngIf="!comment.localTime" class="timestampSpan">{{comment.timeStamp.seconds * 1000 | timeAgo}} </span>
+                    <span *ngIf="comment.localTime" class="timestampSpan">{{comment.localTime | timeAgo }} </span>  
+                    <span *ngIf="comment.updatedAt" class="timestampSpan">&middot; edited </span> 
+                </div>
+            </div>
+
+            <div *ngIf="!editCommentFlag[comIndex]" style="margin-top:5px;" >
+                <div class="innerDiv" [innerHtml]="comment.commentBodyHtml"></div>
+            </div>
+            <div *ngIf="editCommentFlag[comIndex]" style="margin-top:5px" >
+                <app-comment-input (comValueChange)="updateComValueChange($event)"
+                        [initData]="updateCommentBody"
+                        [placeholder]="'Add a comment...'"
+                        
+                        [isFor]="'com'">
+
+                    </app-comment-input>
+
+                    <div class="commentButton" >
+                        <button mat-raised-button color="primary" [disabled]="disableUpdateCommentButton"
+                            (click)="updateComment(comIndex)" >update</button>
+                        <button mat-raised-button color="primary" [disabled]="disableUpdateCommentButton" style="margin-left:10px"
+                            (click)="cancelUpdateComment(comIndex)" >cancel</button>
+                    </div>
+            </div>
+
+             <!-- footer icons -->
+             <div class="flexRowSpcBet">
+                <div class="flexRow">
+                    <!-- like buttons -->
+                    <div style="margin-right:10px">
+                    <!-- <span *ngIf="comment.commentLikes > 0" style="color:gray">{{comment.commentLikes}}</span> -->
+                    <span style="color:gray; font-size:16px">{{comment.commentLikes}}</span>
+                    <button *ngIf="comment.userLiked ; else notLiked; " (click)="(unLikeCommentClicked( comIndex))"  mat-icon-button class="small">
+                        <mat-icon color="primary">thumb_up_alt</mat-icon>
+                    </button> 
+                    <ng-template  #notLiked >
+                        <button (click)="(likeCommentClicked( comIndex))"  mat-icon-button class="small">
+                            <mat-icon >thumb_up_alt</mat-icon>
+                            </button> 
+                    </ng-template>
+                    
+                    </div>
+                    <!-- reply buttons -->
+                    <!-- here we use two buttons just to toggle the reply button -->
+                    <div>
+                        <span style="color:gray; font-size:16px">{{comment.noOfReplies}}</span>
+                        <button *ngIf="comment.docId != comReplyUid" (click)="replyCommentClicked(comment.docId)"   mat-icon-button class="small">
+                            <mat-icon >reply</mat-icon>
+                        </button>
+                        <button *ngIf="comment.docId == comReplyUid" (click)="replyCommentClicked(false)"   mat-icon-button class="small">
+                            <mat-icon >reply</mat-icon>
+                        </button>
+                    </div>
+                    
+                </div>
+                <div *ngIf="_user">
+                    <div *ngIf="comment.authorId == _user.uid" >
+                        <div *ngIf="deletingFlag[comIndex] !== true" class="flexRow">
+                            <div (click)="editComment(comIndex)" style="cursor:pointer;color:gray">Edit</div>
+                            <div (click)="deleteComment(comIndex)" style="cursor:pointer;margin-left:10px;color:gray">Delete</div>
+                        </div>
+                        <div *ngIf="deletingFlag[comIndex] === true">
+                            Deleting...
+                        </div>
+                    </div>
+                </div>
+                     
+            </div>
+
+             <!-- write reply section -->
+            <div *ngIf="comment.docId == comReplyUid" class="flexRow">
+
+                    <div>
+                        <div *ngIf="!_user"   >
+                            <img class="commentAvatar commentAvatarSmall" 
+                                src="https://i.imgur.com/Gakh0MN.png" >
+                        </div>
+                        <div *ngIf="_user">
+                                <img *ngIf="_user.photoURL"  class="commentAvatar commentAvatarSmall" 
+                                [src]="_user.photoURL" ghostImg> 
+                        </div>
+                    </div>
+                    
+                    <div class="rightSide">
+                        <div>
+                            <app-comment-input  (repValueChange)="repValueChange($event)"
+                                            [placeholder]="'Add a reply...'"
+                                            [isFor]="'rep'"
+                            > </app-comment-input>
+                        </div>
+                        <div class="commentButton" >
+                        <button mat-raised-button color="primary" [disabled]="disableReplyButton"
+                            (click)="addReply(comIndex)" >Reply</button>
+                        <button mat-raised-button color="primary" [disabled]="disableReplyButton" style="margin-left:10px"
+                            (click)="cancelReply()" >Cancel</button>
+                        </div>
+                    </div>
+        
+            </div>
+
+            <app-replies-list *ngIf="comment.docId" [commentDocUid]="commentDocUid"
+                [noOfReplies]="comment.noOfReplies"
+                [commentIndex]="comIndex"
+                (noOfRepliesChanged)="noOfRepliesChanged($event)"
+                [commentId]="comment.docId">
+
+            </app-replies-list>
+        </div>
+    </div>
+
+</div>
+
+<div *ngIf="loadMoreComments == true" style="margin-top:10px" >
+    <div >
+        <button mat-stroked-button  (click)="showMoreComments()">
+            Show more comments
+        </button>
+    </div>
+</div>
+<div *ngIf="loadMoreComments == 'loading'" class="flexRowCenter">
+    <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner>
+</div>

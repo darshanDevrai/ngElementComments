@@ -1,0 +1,20 @@
+
+
+
+    <div>
+            <mat-form-field class="editorContainer" appearance="outline">
+                    <textarea #myTextArea [ngModel]="content" matInput
+                        matTextareaAutosize matAutosizeMinRows="1" ngPreserveWhitespaces 
+                        (ngModelChange)="onTextareaChange($event)" 
+                        (focus)="focused()"
+                        (blur)="blured()"
+                            class="editorTextArea"
+                            [placeholder]="placeholder"
+                        >
+                    </textarea>
+                </mat-form-field>
+    </div>
+    
+
+   
+
