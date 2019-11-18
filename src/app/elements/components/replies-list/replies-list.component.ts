@@ -150,7 +150,6 @@ export class RepliesListComponent implements OnInit,OnDestroy {
             this.cd.detectChanges();
           }).catch(err=>{
             this.dataService.showError('Error gettting replies');
-            // console.log("Error gettting replies--> ", err);
           });
 
     
@@ -160,12 +159,10 @@ export class RepliesListComponent implements OnInit,OnDestroy {
   checkUserLikedReply(replyId:string, index:number){
     if(this._user){
       const commLikeDocId = "user::"+this._user.uid+"-"+replyId;
-      // this.db.collection("commentLikes").doc(commLikeDocId).get()
       this.db.collection("comments").doc(this.commentDocUid).
                       collection("commentLikes").doc(commLikeDocId).get()
       .toPromise()
       .then(docSnapshot =>{
-        // console.log("doc exist ", docSnapshot.exists);
         if(docSnapshot.exists){
           this.replies[index].userLiked = true;
         }else{
@@ -193,8 +190,7 @@ export class RepliesListComponent implements OnInit,OnDestroy {
           querySnapshot.forEach( doc => {
             
             const data = doc.data() as ReplyModel;
-              // quill deltas
-            //  data.replyBody = JSON.parse(data.replyBody);
+    
             repliesLength = this.replies.push(data);
 
             this.checkUserLikedReply( data.docId, repliesLength - 1);
@@ -244,10 +240,7 @@ export class RepliesListComponent implements OnInit,OnDestroy {
       this.disableUpdateReplyButton = true;
       this.cd.detectChanges();
       const linkifyedReplyBody = this.linkifyService.linkifyIt(this.updateReplyBody);
-      // sanitize html
-      // this.replyBody = this.sanitized.sanitize(SecurityContext.HTML , this.replyBody);
       const replyDocId = this.replies[replyIndex].docId;
-      // this.db.collection("comments").doc(commentId).collection("replies").doc(replyId)
       const replyDocRef = this.db.collection("comments").doc(this.commentDocUid).collection("comments").doc(this.commentId)
         .collection("replies").doc(replyDocId).ref;
 
@@ -262,7 +255,6 @@ export class RepliesListComponent implements OnInit,OnDestroy {
           // console.log("Document successfully updated!");
           this.replies[replyIndex].replyBodyHtml = linkifyedReplyBody.html;
           this.replies[replyIndex].replyBodyText = linkifyedReplyBody.text;
-          // this.comments[comIndex].replies[replyIndex].replyBodyText = this.replyBody;
           this.disableUpdateReplyButton = false;
           this.updateReplyBody = '';
           this.replies[replyIndex].updatedAt = 1;
@@ -271,7 +263,6 @@ export class RepliesListComponent implements OnInit,OnDestroy {
       })
       .catch((error) => {
           // The document probably doesn't exist.
-          // console.error("Error updating updateReply: ", error);
           this.dataService.showError('Something went wrong while updating the reply:( Please try again');
           this.disableUpdateReplyButton = false;
           this.cd.detectChanges();
@@ -305,7 +296,6 @@ export class RepliesListComponent implements OnInit,OnDestroy {
           this.deletingFlag = [];
           this.cd.detectChanges();
         }).catch(err=>{
-          // console.log("Error while deleting reply -->", err);
           this.dataService.showError('Something went wrong while deleting the reply');
           this.deletingFlag = [];
           this.cd.detectChanges();
@@ -318,7 +308,6 @@ export class RepliesListComponent implements OnInit,OnDestroy {
 
       deleteDoc.then(value => {
         // here decrement parents number of comments.
-        // console.log("value from function after deleting comment is ", value);
         batch.commit().then(value=>{
           this.replies.splice(replyIndex,1);
           this.noOfReplies = this.noOfReplies - 1;
@@ -326,13 +315,11 @@ export class RepliesListComponent implements OnInit,OnDestroy {
           this.deletingFlag = [];
           this.cd.detectChanges();
         }).catch(err=>{
-          // console.log("Error while deleting comment -->", err);
           this.dataService.showError("Something went wrong while deleting the reply:(");
           this.deletingFlag = [];
           this.cd.detectChanges();
         });
       }).catch(err=>{
-        // console.log("Error is ", err);
         this.dataService.showError("Something went wrong while deleting the reply:(");
         this.deletingFlag = [];
         this.cd.detectChanges();
@@ -364,7 +351,6 @@ export class RepliesListComponent implements OnInit,OnDestroy {
   }
 
   repToRepValueChange(leveleTwoReplyBody){
-    // console.log("Inner reply body in comments is ", innReplyBody);
     this.replyToReplyBody = leveleTwoReplyBody;
   }
 
@@ -376,7 +362,7 @@ export class RepliesListComponent implements OnInit,OnDestroy {
       this.dataService.showError("REply body is empty:(");
       return;
     }else{
-      // console.log("adding reply to reply");
+
       this.disableReplyToReplyButton = true;
       this.cd.detectChanges();
       const linkifyedReplyBody = this.linkifyService.linkifyIt(this.replyToReplyBody);
@@ -389,8 +375,7 @@ export class RepliesListComponent implements OnInit,OnDestroy {
         authorPhotoURL : this._user.photoURL,
         replyTo : replyTo,
         replyBodyText : linkifyedReplyBody.text,
-        replyBodyHtml : linkifyedReplyBody.html, //this.sanitized.sanitize(SecurityContext.HTML , this.innerReplyBody),//this.innerReplyBody,
-        // replyBodyText : this.innerReplyBody,
+        replyBodyHtml : linkifyedReplyBody.html, 
         replyId : replyId,
         replyLikes : 0,
         noOfReplies : 0,
@@ -416,18 +401,11 @@ export class RepliesListComponent implements OnInit,OnDestroy {
       
       batch.commit()
       .then((docRef) => {
-            // console.log("Document written with ID: ", docRef.id);
+
             // add new commnet in local array
             const date = new Date(); 
             docToAdd.localTime = date.getTime();// local time
-            // docToAdd['userLiked'] = false;
-            // this.noOfReplies = this.noOfReplies + 1;
-            // if(this.replyId){
-            //   this.noOfRepliesForReplyChanged.emit({replyIndex: this.replyIndex, noOfReplies: this.noOfReplies});
-            // }else{
-            //   this.noOfRepliesChanged.emit({commentIndex: this.commentIndex, noOfReplies: this.noOfReplies})
-            // }
-            
+
               const replyData:replyData = {
                 reply: docToAdd,
                 replyId: replyId
@@ -440,7 +418,7 @@ export class RepliesListComponent implements OnInit,OnDestroy {
             this.cd.detectChanges();
       })
       .catch((error) =>{
-          // console.error("Error adding addInnerReply: ", error);
+
           this.dataService.showError("Something went wrong while adding the reply:(");
           this.noOfReplies = this.noOfReplies - 1;
           this.cd.detectChanges();
@@ -485,7 +463,7 @@ export class RepliesListComponent implements OnInit,OnDestroy {
           this.cd.detectChanges();
         })
         .catch(err=>{
-          // console.error("Error in likeReplyClicked add",err);
+
           this.dataService.showError("Something went wrong while liking the reply:(");
           this.replies[replyIndex].userLiked = false;
           this.replies[replyIndex].replyLikes = this.replies[replyIndex].replyLikes - 1;
@@ -512,7 +490,7 @@ export class RepliesListComponent implements OnInit,OnDestroy {
     const replyId = this.replies[replyIndex].docId;
     const userId = this._user.uid;
     const commLikeDocId = "user::"+userId+"-"+replyId;
-    // var comLikesRef = this.db.collection("commentLikes").doc(commLikeDocId).ref;
+
     const comLikesRef = this.db.collection("comments").doc(this.commentDocUid).
       collection("commentLikes").doc(commLikeDocId).ref;
 
@@ -540,7 +518,7 @@ export class RepliesListComponent implements OnInit,OnDestroy {
           this.cd.detectChanges();
         })
         .catch(err=>{
-          // console.error("Error in unLikeReplyClicked add",err);
+
           this.dataService.showError("Something went wrong while unliking the reply:(");
           this.replies[replyIndex].userLiked = true;
           this.replies[replyIndex].replyLikes = this.replies[replyIndex].replyLikes + 1;

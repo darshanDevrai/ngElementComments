@@ -94,8 +94,6 @@ export class MainComponent implements OnInit,OnDestroy {
 
   private createComDoc(){
     const docId = `entity::${this,this.parentId}`;
-    // let docId = this.db.createId();
-    // this.db.collection("comments").doc(docId)
     this.db.collection("comments").doc(docId)
     .set({
       noOfComments : 0,
@@ -105,7 +103,6 @@ export class MainComponent implements OnInit,OnDestroy {
       this.noOfComments = 0;
       this.cd.detectChanges();
       // console.log("comDoc was not present so it was created => ", this.parentId);
-      // this.noOfCommentsChanged.emit(0);
     }).catch(err=>{
       // console.log("Error while creating com doc ", err);
       this.dataService.showError("Something went wrong:( Please try again later.");

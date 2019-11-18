@@ -86,14 +86,10 @@ export class AddCommentComponent implements OnInit, OnDestroy {
     }else{
       this.disableCommentButton = true;
       this.cd.detectChanges();
-      // this.linkifyService.printIt();
-      // console.log("linkify calling");
+
       const linkifyedComentBody = this.linkifyService.linkifyIt(this.commentBody);
-      // console.log("after linkify");
       const docId = this.db.createId();
-      // const docId1 = this.db.collection("comments").ref.doc().id;
-      // console.log("Doc id is ", docId);
-      // console.log("Doc id1 is ", docId1);
+
       const batch = this.db.firestore.batch();
       const docToAdd:CommentModel = {
         authorId: this._user.uid,
@@ -107,10 +103,6 @@ export class AddCommentComponent implements OnInit, OnDestroy {
       }
       docToAdd.timeStamp = firebase.firestore.FieldValue.serverTimestamp();
       
-      // console.log("docId is ", docToAdd);
-      
-      // this.db.collection("comments").doc(this.typeParentId).collection("comments").doc(docId)
-      // .set(docToAdd)
 
       const newComRef = this.db.collection("comments").doc(this.commentDocUid).
                       collection("comments").doc(docId).ref;
@@ -121,17 +113,12 @@ export class AddCommentComponent implements OnInit, OnDestroy {
         noOfComments : firebase.firestore.FieldValue.increment(1)
       })
       batch.commit()
-      // this.db.collection("comments").doc(docId).set(docToAdd)
       .then((docRef) => {
           // add new commnet in local array
           const date = new Date(); 
           docToAdd.localTime = date.getTime();// local time
           docToAdd.userLiked = false;
-          // docToAdd.replies = [];
-          // docToAdd['userLiked'] = false;
-          // this.noOfComments = this.noOfComments + 1;
-          // this.noOfCommentsChanged.emit(this.noOfComments);
-          // this.comments.unshift(data);
+
           this.dataService.addCommentToArray(docToAdd);
           //clear the commentBody
           this.commentBody = "";

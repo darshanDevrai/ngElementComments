@@ -10,8 +10,7 @@ export class CommentInputComponent implements OnInit {
 
 
   constructor(private cd: ChangeDetectorRef) { }
-  // data:any;
-  // @Input() userName:string;
+
   @Input() initData:string;
   @Input() placeholder: string = 'Join the discussion…';
   @Output() comValueChange = new EventEmitter<string>();
@@ -37,9 +36,7 @@ export class CommentInputComponent implements OnInit {
   @Input() isFor:string = 'com';
 
   ngOnInit() {
-    // if(this.userName){
-    //   this.content = "@"+this.userName+", ";//&nbsp"
-    // }
+
 
     if(this.initData){
       this.content = this.initData;
@@ -78,8 +75,6 @@ export class CommentInputComponent implements OnInit {
   
 
   clearTheTextField(){
-    // this.renderer.setProperty(this.el.nativeElement, 'innerHTML', "");
-    // this.content = "";
     this.myTextArea.nativeElement.value = "";
   }
 

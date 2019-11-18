@@ -141,13 +141,10 @@ export class CommentsListComponent implements OnInit,OnDestroy {
           // store last doc from the querySnapshot.
         this.lastCommentDoc = querySnapshot.docs[querySnapshot.docs.length-1];
 
-        // commLength stores length of this.comments
         let commLength;
         querySnapshot.forEach( doc => {
 
           const data = doc.data() as CommentModel;
-           // quill deltas
-          // data.commentBody = JSON.parse(data.commentBody);
           commLength = this.comments.push(data);
           
           this.checkUserLikedComment(data.docId, commLength - 1);
@@ -199,9 +196,6 @@ export class CommentsListComponent implements OnInit,OnDestroy {
     const lastCommentDoc = this.lastCommentDoc;
     const comRef = this.db.collection("comments").doc(this.commentDocUid).collection("comments").ref;
     const query = comRef.limit(15).orderBy('timeStamp', 'asc').startAfter(lastCommentDoc);
-    // this.allSubscriptions = this.db.collection("comments", ref => {
-    //   return ref.where('parentId', '==', this.parentId).limit(10).startAfter(lastCommentDoc)
-    // })
      query
     .get().then(querySnapshot => {
       // update lastCOmmentDoc
@@ -209,8 +203,6 @@ export class CommentsListComponent implements OnInit,OnDestroy {
         let commLength;
         querySnapshot.forEach( doc => {
           const data = doc.data() as CommentModel;
-          // quill deltas
-          // data.commentBody = JSON.parse(data.commentBody);
           commLength = this.comments.push(data);
           
           this.checkUserLikedComment(data.docId, commLength - 1);
@@ -227,7 +219,6 @@ export class CommentsListComponent implements OnInit,OnDestroy {
       this.loadMoreComments = true;
       this.cd.detectChanges();
       this.dataService.showError('Error geting more comments.');
-      // console.log("Error geting more comments.--> ", err);
     });
   }
 
@@ -252,7 +243,6 @@ export class CommentsListComponent implements OnInit,OnDestroy {
 
     // ###### EDITOR VALUES 
     updateComValueChange(commBody){
-      // console.log("comment body in comments is ", commBody);
       this.updateCommentBody = commBody;
     }
 
@@ -266,22 +256,17 @@ export class CommentsListComponent implements OnInit,OnDestroy {
         this.cd.detectChanges();
         const linkifyedComentBody = this.linkifyService.linkifyIt(this.updateCommentBody);
         const docId = this.comments[comIndex].docId;
-        // sanitize html
-        // this.commentBody = this.sanitized.sanitize(SecurityContext.HTML , this.commentBody);
-      
+
         this.db.collection("comments").doc(this.commentDocUid).collection("comments").doc(docId)
         .update({
-            // commentBody : JSON.stringify(this.updateCommentBody), // for quill delta
             commentBodyHtml : linkifyedComentBody.html, 
             commentBodyText : linkifyedComentBody.text,
             updatedAt : firebase.firestore.FieldValue.serverTimestamp()
         })
         .then(() => {
             // reflect updated changes in local variable.
-            // this.comments[comIndex].commentBody = this.updateCommentBody;
             this.comments[comIndex].commentBodyHtml = linkifyedComentBody.html;
             this.comments[comIndex].commentBodyText = linkifyedComentBody.text;
-            // this.comments[comIndex].commentBodyText = this.commentBody;
             this.disableUpdateCommentButton = false;
             // clear updateCommentBody
             this.updateCommentBody = '';
@@ -292,7 +277,6 @@ export class CommentsListComponent implements OnInit,OnDestroy {
             this.cd.detectChanges();
         })
         .catch((error) => {
-            // console.error("Error updating updateComment: ", error);
             this.dataService.showError('Something went wrong while updating comment:(');
             this.editCommentFlag[comIndex] = false;
             this.cd.detectChanges();
@@ -323,7 +307,6 @@ export class CommentsListComponent implements OnInit,OnDestroy {
           this.deletingFlag = [];
           this.cd.detectChanges();
         }).catch(err=>{
-          // console.log("Error while deleting comment -->", err);
           this.dataService.showError('Somwthing went wrong while deleting a comment:(')
           this.deletingFlag = [];
           this.cd.detectChanges();
@@ -336,7 +319,7 @@ export class CommentsListComponent implements OnInit,OnDestroy {
           }).toPromise();
         deleteDoc.then(value => {
           // here decrement parents number of comments.
-          // console.log("value from function after deleting comment is ", value);
+
           batch.commit().then(value=>{
             this.comments.splice(comIndex,1);
             this.noOfComments = this.noOfComments - 1;
@@ -344,13 +327,11 @@ export class CommentsListComponent implements OnInit,OnDestroy {
             this.deletingFlag = [];
             this.cd.detectChanges();
           }).catch(err=>{
-            // console.log("Error while deleting comment -->", err);
             this.dataService.showError('Somwthing went wrong while deleting a comment:(')
             this.deletingFlag = [];
             this.cd.detectChanges();
           })
         }).catch(err=>{
-          // console.log("Error is ", err);
           this.dataService.showError('Somwthing went wrong while deleting a comment:(')
           this.deletingFlag = [];
           this.cd.detectChanges();
@@ -376,7 +357,6 @@ export class CommentsListComponent implements OnInit,OnDestroy {
     }
 
     repValueChange(replyBody){
-      // console.log("reply body in comments is ", replyBody);
       this.replyBody = replyBody;
     }
 
@@ -408,7 +388,6 @@ export class CommentsListComponent implements OnInit,OnDestroy {
         }
         docToAdd.timeStamp = firebase.firestore.FieldValue.serverTimestamp();
         const batch = this.db.firestore.batch();
-        // this.db.collection("comments").doc(this.comReplyUid).collection("replies").doc(docId).set(docToAdd)
         const replyDocRef = this.db.collection("comments").doc(this.commentDocUid)
                             .collection("comments").doc(this.comReplyUid)
                             .collection("replies").doc(docId).ref;
@@ -431,7 +410,6 @@ export class CommentsListComponent implements OnInit,OnDestroy {
               reply : docToAdd
             }
             this.dataService.addReplyToArray(sendData);
-            // this.comments[comIndex].noOfReplies = this.comments[comIndex].noOfReplies + 1;
             this.comReplyUid = false;
             this.replyBody = "";
             this.disableReplyButton = false;
@@ -440,7 +418,6 @@ export class CommentsListComponent implements OnInit,OnDestroy {
         .catch((error) =>{
           this.disableReplyButton = false;
             this.cd.detectChanges();
-            // console.error("Error adding addReply: ", error);
             this.dataService.showError('Somwthing went wrong while adding a reply:(')
         });
       }
@@ -457,7 +434,6 @@ export class CommentsListComponent implements OnInit,OnDestroy {
       const commId = this.comments[comIndex].docId;
       const userId = this._user.uid;
       const commLikeDocId = "user::"+userId+"-"+commId;
-      // var comLikesRef = this.db.collection("commentLikes").doc(commLikeDocId).ref;
       const comLikesRef = this.db.collection("comments").doc(this.commentDocUid).
                         collection("commentLikes").doc(commLikeDocId).ref;
       comLikesRef.get().then((commLikedDoc) =>{
@@ -483,7 +459,6 @@ export class CommentsListComponent implements OnInit,OnDestroy {
               this.cd.detectChanges();
           })
           .catch(err=>{
-            // console.error("Error in likeCommentClickedy add",err);
             this.dataService.showError('Somwthing went wrong while liking a comment:(')
             // revert the local changes which were done at the begining of this function.
             this.comments[comIndex].userLiked = false;
@@ -513,7 +488,6 @@ export class CommentsListComponent implements OnInit,OnDestroy {
         const commId = this.comments[comIndex].docId;
         const userId = this._user.uid;
         const commLikeDocId = "user::"+userId+"-"+commId;
-        // var comLikesRef = this.db.collection("commentLikes").doc(commLikeDocId).ref;
         const comLikesRef = this.db.collection("comments").doc(this.commentDocUid).
                           collection("commentLikes").doc(commLikeDocId).ref;
         comLikesRef.get().then((commLikedDoc) =>{
@@ -538,7 +512,6 @@ export class CommentsListComponent implements OnInit,OnDestroy {
             })
             .catch(err=>{
               this.dataService.showError('Somwthing went wrong while unliking a comment:(')
-              // console.error("Error in unLikeCommentClicked add",err);
               // revert the local changes which were done at the begining of this function as there is error.
               this.comments[comIndex].userLiked = true;
               this.comments[comIndex].commentLikes = this.comments[comIndex].commentLikes + 1;

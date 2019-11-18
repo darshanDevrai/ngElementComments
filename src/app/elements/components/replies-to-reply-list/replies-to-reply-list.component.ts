@@ -122,9 +122,7 @@ export class RepliesToReplyListComponent implements OnInit,OnDestroy {
               var repliesLength;
               querySnapshot.forEach( doc => {
                 var data = doc.data() as ReplyModel;
-                // console.log("Data is ", data);
-                  // quill deltas
-                // data.replyBody = JSON.parsedata.replyBody);
+              
                 repliesLength = this.replies.push(data);
     
                 this.checkUserLikedReply( data.docId, repliesLength - 1);
@@ -138,7 +136,7 @@ export class RepliesToReplyListComponent implements OnInit,OnDestroy {
             this.cd.detectChanges();
           }).catch(err=>{
             this.dataService.showError('Something went wrong while getting replies:(');
-            // console.log("Error gettting replies--> ", err);
+
           });
     
   }
@@ -146,12 +144,12 @@ export class RepliesToReplyListComponent implements OnInit,OnDestroy {
   checkUserLikedReply(replyId:string, index:number){
     if(this._user){
       const commLikeDocId = "user::"+this._user.uid+"-"+replyId;
-      // this.db.collection("commentLikes").doc(commLikeDocId).get()
+
       this.db.collection("comments").doc(this.commentDocUid).
                       collection("commentLikes").doc(commLikeDocId).get()
       .toPromise()
       .then(docSnapshot =>{
-        // console.log("doc exist ", docSnapshot.exists);
+
         if(docSnapshot.exists){
           this.replies[index].userLiked = true;
         }else{
@@ -238,10 +236,10 @@ export class RepliesToReplyListComponent implements OnInit,OnDestroy {
             updatedAt : firebase.firestore.FieldValue.serverTimestamp()
       })
       .then(() => {
-          // console.log("Document successfully updated!");
+
           this.replies[replyIndex].replyBodyHtml = linkifyedReplyBody.html;
           this.replies[replyIndex].replyBodyText = linkifyedReplyBody.text;
-          // this.comments[comIndex].replies[replyIndex].replyBodyText = this.replyBody;
+
           this.disableUpdateReplyButton = false;
           this.updateReplyBody = '';
           this.replies[replyIndex].updatedAt = 1;
@@ -250,7 +248,6 @@ export class RepliesToReplyListComponent implements OnInit,OnDestroy {
       })
       .catch((error) => {
           // The document probably doesn't exist.
-          // console.error("Error updating updateReply: ", error);
           this.dataService.showError('Something went wrong while updating the reply:(')
           this.disableUpdateReplyButton = false;
           this.cd.detectChanges();
@@ -341,8 +338,7 @@ export class RepliesToReplyListComponent implements OnInit,OnDestroy {
         authorPhotoURL : this._user.photoURL,
         replyTo : replyTo,
         replyBodyText : linkifyedReplyBody.text,
-        replyBodyHtml : linkifyedReplyBody.html, //this.sanitized.sanitize(SecurityContext.HTML , this.innerReplyBody),//this.innerReplyBody,
-        // replyBodyText : this.innerReplyBody,
+        replyBodyHtml : linkifyedReplyBody.html, 
         replyId : replyId,
         replyLikes : 0,
         noOfReplies : 0,
@@ -382,7 +378,6 @@ export class RepliesToReplyListComponent implements OnInit,OnDestroy {
             this.cd.detectChanges();
       })
       .catch((error) =>{
-          // console.error("Error adding addInnerReply: ", error);
           this.dataService.showError('Something went wrong while adding the reply:(');
           this.noOfReplies = this.noOfReplies - 1;
           this.cd.detectChanges();
