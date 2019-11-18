@@ -24,12 +24,12 @@
                 <div>
                     <strong>{{comment.author}}</strong>
                 </div>
-                <span style="margin:0px 5px;">&middot; </span>
+                <span style="margin:0px 2px;">&middot; </span>
                 
                 <div style="color:gray">
-                    <span *ngIf="!comment.localTime" class="timestampSpan">{{comment.timeStamp.seconds * 1000 | timeAgo}} </span>
-                    <span *ngIf="comment.localTime" class="timestampSpan">{{comment.localTime | timeAgo }} </span>  
-                    <span *ngIf="comment.updatedAt" class="timestampSpan">&middot; edited </span> 
+                    <span *ngIf="!comment.localTime" >{{comment.timeStamp.seconds * 1000 | timeAgo}} </span>
+                    <span *ngIf="comment.localTime" >{{comment.localTime | timeAgo }} </span>  
+                    <span *ngIf="comment.updatedAt" >&middot; edited </span> 
                 </div>
             </div>
 

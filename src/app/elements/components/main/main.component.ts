@@ -13,17 +13,22 @@ import { DataService } from '../../services/data/data.service';
   encapsulation: ViewEncapsulation.ShadowDom 
 })
 export class MainComponent implements OnInit,OnDestroy {
-  ngOnDestroy(): void {
-   if(this.allSubscriptions){
-     this.allSubscriptions.unsubscribe();
+   // All subscriptions are stored in these variable and unsubscribed in ngOnDestroy
+   private authSubscription: Subscription;
+   private dataSubscription: Subscription;
+   ngOnDestroy(): void {
+     if(this.authSubscription && this.authSubscription instanceof Subscription){
+       this.authSubscription.unsubscribe();
+     }
+     if(this.dataSubscription && this.dataSubscription instanceof Subscription){
+       this.dataSubscription.unsubscribe();
+     }
    }
-  }
 
   @Input()
   parentId:string;
 
   _user: User;
-  allSubscriptions:Subscription;
 
   // Doc id for comment parent doc
   commentDocUid:string;
@@ -42,7 +47,7 @@ export class MainComponent implements OnInit,OnDestroy {
     private dataService:DataService
     
   ) { 
-    this.allSubscriptions = this.authService.user$.subscribe((user)=>{
+    this.authSubscription = this.authService.user$.subscribe((user)=>{
       this._user = user;
     });
   }
@@ -72,7 +77,7 @@ export class MainComponent implements OnInit,OnDestroy {
     });
     this.cd.detectChanges();
 
-    this.allSubscriptions = this.dataService.showErr$.subscribe((errMsg)=>{
+    this.dataSubscription = this.dataService.showErr$.subscribe((errMsg)=>{
       if(errMsg != null){
         // destroy old msg if showing
         this.showError = false;

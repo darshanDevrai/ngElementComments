@@ -8,7 +8,7 @@ import { Subscription, Observable, timer} from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ErrorComponentComponent implements OnInit,OnDestroy {
-  private allSubscription: Subscription;
+  private timerSubscription: Subscription;
   private timer: Observable<number>;
   @Input() errorMsg: string ;
   @Input() time: number ;
@@ -18,7 +18,7 @@ export class ErrorComponentComponent implements OnInit,OnDestroy {
 
   ngOnInit() {
     this.timer        = timer(1000 * this.time); // 5000 millisecond means 5 seconds
-    this.allSubscription = this.timer.subscribe(() => {
+    this.timerSubscription = this.timer.subscribe(() => {
         this.onClose();
     });
   }
@@ -27,8 +27,8 @@ export class ErrorComponentComponent implements OnInit,OnDestroy {
   }
 
   ngOnDestroy() {
-    if ( this.allSubscription && this.allSubscription instanceof Subscription) {
-      this.allSubscription.unsubscribe();
+    if ( this.timerSubscription && this.timerSubscription instanceof Subscription) {
+      this.timerSubscription.unsubscribe();
     }
   }
 

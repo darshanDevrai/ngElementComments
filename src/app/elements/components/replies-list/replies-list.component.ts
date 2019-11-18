@@ -19,10 +19,15 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 })
 export class RepliesListComponent implements OnInit,OnDestroy {
 
-  private allSubscriptions: Subscription;
+  // All subscriptions are stored in these variable and unsubscribed in ngOnDestroy
+  private authSubscription: Subscription;
+  private dataSubscription: Subscription;
   ngOnDestroy(): void {
-    if(this.allSubscriptions){
-      this.allSubscriptions.unsubscribe();
+    if(this.authSubscription && this.authSubscription instanceof Subscription){
+      this.authSubscription.unsubscribe();
+    }
+    if(this.dataSubscription && this.dataSubscription instanceof Subscription){
+      this.dataSubscription.unsubscribe();
     }
   }
 
@@ -87,7 +92,7 @@ export class RepliesListComponent implements OnInit,OnDestroy {
     private linkifyService:LinkifyService,
     private fns: AngularFireFunctions
   ) { 
-    this.allSubscriptions = this.authService.user$.subscribe((user)=>{
+    this.authSubscription = this.authService.user$.subscribe((user)=>{
       this._user = user;
       this.cd.detectChanges();
     });
@@ -96,7 +101,7 @@ export class RepliesListComponent implements OnInit,OnDestroy {
   ngOnInit() {
 
     this.getReplies();
-      this.allSubscriptions = this.dataService.addReply$.subscribe((replyData)=>{
+      this.dataSubscription = this.dataService.addReply$.subscribe((replyData)=>{
         if(replyData != null && this.commentId == replyData.commentId){
           this.noOfReplies = this.noOfReplies + 1;
           const noOfRepliesData: noOfRepliesData = {

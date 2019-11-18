@@ -13,13 +13,13 @@ import { Subscription } from 'rxjs';
 })
 export class AuthComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
-    if(this.allSubscriptions){
-      this.allSubscriptions.unsubscribe();
+    if(this.authSubscription && this.authSubscription instanceof Subscription) {
+      this.authSubscription.unsubscribe();
     }
   }
 
   _user:User;
-  allSubscriptions:Subscription;
+  authSubscription:Subscription;
 
 
   constructor(
@@ -27,7 +27,7 @@ export class AuthComponent implements OnInit, OnDestroy {
     private db: AngularFirestore,
     private authService: AuthService,
   ) {
-     this.allSubscriptions = this.authService.user$.subscribe((user)=>{
+     this.authSubscription = this.authService.user$.subscribe((user)=>{
        this._user = user;
        this.cd.detectChanges();
      });

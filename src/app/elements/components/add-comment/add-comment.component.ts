@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, Input, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../services/auth/auth.service';
 import { User } from '../../models/user.model';
@@ -15,14 +15,19 @@ import { DataService } from '../../services/data/data.service';
   styleUrls: ['./add-comment.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AddCommentComponent implements OnInit {
+export class AddCommentComponent implements OnInit, OnDestroy {
+  ngOnDestroy(): void {
+    if(this.authSubscription && this.authSubscription instanceof Subscription){
+      this.authSubscription.unsubscribe();
+    }
+  }
 
   @ViewChild('myInput', { static: true }) topCommentInput; 
   showButton: boolean = false;
   disableCommentButton: boolean = false;
 
   _user: User;
-  allSubscriptions:Subscription;
+  authSubscription:Subscription;
 
   @Input()
   commentDocUid:string;
@@ -37,7 +42,7 @@ export class AddCommentComponent implements OnInit {
     private linkifyService: LinkifyService,
     private dataService: DataService
   ) { 
-    this.allSubscriptions = this.authService.user$.subscribe((user)=>{
+    this.authSubscription = this.authService.user$.subscribe((user)=>{
       this._user = user;
       this.cd.detectChanges();
     });

@@ -38,7 +38,6 @@ export class AuthService {
         const credential = await this.afAuth.auth.signInWithPopup(provider);
         // return this.updateUserData(credential.user);
       }catch(err){
-        // console.log("Err -> ",err);
         if(err.code == "auth/network-request-failed"){
           return this.dataService.showError("Network error. Unable to login. Please try agian later.");
         }else if(err.code !== 'auth/popup-closed-by-user' && err.code !== 'auth/cancelled-popup-request'){

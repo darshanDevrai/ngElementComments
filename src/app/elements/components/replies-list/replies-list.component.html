@@ -24,15 +24,15 @@
                 <div>
                     <strong>{{reply.author}}</strong>
                 </div>
-                <div style="color:gray;margin:0px 5px;">
+                <div style="color:gray;margin:0px 2px;">
                    To: {{reply.replyTo}}
                 </div>
-                <span style="margin:0px 5px;">&middot; </span>
+                <span style="margin:0px 2px;">&middot; </span>
                 
                 <div style="color:gray">
-                    <span *ngIf="!reply.localTime" class="timestampSpan">{{reply.timeStamp.seconds * 1000 | timeAgo}} </span>
-                    <span *ngIf="reply.localTime" class="timestampSpan">{{reply.localTime | timeAgo }} </span>  
-                    <span *ngIf="reply.updatedAt" class="timestampSpan">&middot; edited </span> 
+                    <span *ngIf="!reply.localTime" >{{reply.timeStamp.seconds * 1000 | timeAgo}} </span>
+                    <span *ngIf="reply.localTime" >{{reply.localTime | timeAgo }} </span>  
+                    <span *ngIf="reply.updatedAt" >&middot; edited </span> 
                 </div>
                
             </div>

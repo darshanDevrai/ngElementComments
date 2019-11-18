@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { CommentModel } from '../../models/comment.model';
 import { replyData } from '../../models/replyData.model';
 
@@ -11,20 +11,12 @@ import { replyData } from '../../models/replyData.model';
 export class DataService {
   
 
-  addComment$ = new BehaviorSubject<CommentModel>(
-    null
-  );
-  addReply$ = new BehaviorSubject<replyData>(
-    null
-  );
+  addComment$ = new Subject<CommentModel>();
+  addReply$ = new Subject<replyData>();
 
-  addReplyToReply$ = new BehaviorSubject<replyData>(
-    null
-  );
+  addReplyToReply$ = new Subject<replyData>();
 
-  showErr$ = new BehaviorSubject<any>(
-    null
-  );
+  showErr$ = new Subject<any>();
 
   constructor() { }
 

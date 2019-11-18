@@ -19,11 +19,15 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 })
 export class CommentsListComponent implements OnInit,OnDestroy {
 
-  // All subscriptions are stored in this variable and unsubscribed in ngOnDestroy
-  private allSubscriptions: Subscription;
+  // All subscriptions are stored in these variable and unsubscribed in ngOnDestroy
+  private authSubscription: Subscription;
+  private dataSubscription: Subscription;
   ngOnDestroy(): void {
-    if(this.allSubscriptions){
-      this.allSubscriptions.unsubscribe();
+    if(this.authSubscription && this.authSubscription instanceof Subscription){
+      this.authSubscription.unsubscribe();
+    }
+    if(this.dataSubscription && this.dataSubscription instanceof Subscription){
+      this.dataSubscription.unsubscribe();
     }
   }
 
@@ -100,7 +104,7 @@ export class CommentsListComponent implements OnInit,OnDestroy {
     private linkifyService:LinkifyService,
     private fns: AngularFireFunctions
   ) { 
-    this.allSubscriptions = this.authService.user$.subscribe((user)=>{
+    this.authSubscription = this.authService.user$.subscribe((user)=>{
       this._user = user;
       this.cd.detectChanges();
     });
@@ -109,7 +113,7 @@ export class CommentsListComponent implements OnInit,OnDestroy {
   ngOnInit() {
 
     this.getComments();
-    this.allSubscriptions = this.dataService.addComment$.subscribe((comment)=>{
+    this.dataSubscription = this.dataService.addComment$.subscribe((comment)=>{
           if(comment != null){
             this.noOfComments = this.noOfComments + 1;
             this.noOfCommentsChanged.emit(this.noOfComments);

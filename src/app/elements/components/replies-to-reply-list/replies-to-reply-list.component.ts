@@ -18,10 +18,15 @@ import { LinkifyService } from '../../services/linkify/linkify.service';
 export class RepliesToReplyListComponent implements OnInit,OnDestroy {
 
 
-  private allSubscriptions: Subscription;
+  // All subscriptions are stored in these variable and unsubscribed in ngOnDestroy
+  private authSubscription: Subscription;
+  private dataSubscription: Subscription;
   ngOnDestroy(): void {
-    if(this.allSubscriptions){
-      this.allSubscriptions.unsubscribe();
+    if(this.authSubscription && this.authSubscription instanceof Subscription){
+      this.authSubscription.unsubscribe();
+    }
+    if(this.dataSubscription && this.dataSubscription instanceof Subscription){
+      this.dataSubscription.unsubscribe();
     }
   }
 
@@ -85,7 +90,7 @@ export class RepliesToReplyListComponent implements OnInit,OnDestroy {
     private dataService:DataService,
     private linkifyService:LinkifyService
   ) {
-      this.allSubscriptions = this.authService.user$.subscribe((user)=>{
+      this.authSubscription = this.authService.user$.subscribe((user)=>{
         this._user = user;
         this.cd.detectChanges();
       });
@@ -93,7 +98,7 @@ export class RepliesToReplyListComponent implements OnInit,OnDestroy {
 
   ngOnInit() {
     this.getReplies();
-    this.allSubscriptions = this.dataService.addReplyToReply$.subscribe((replyData)=>{
+    this.dataSubscription = this.dataService.addReplyToReply$.subscribe((replyData)=>{
       if(replyData != null && this.replyId == replyData.replyId){
         this.noOfReplies = this.noOfReplies + 1;
         const noOfRepliesData: noOfRepliesData = {
