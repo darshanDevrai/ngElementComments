@@ -1,9 +1,9 @@
-![](https://firebasestorage.googleapis.com/v0/b/element-comments-demo.appspot.com/o/ngElementsComments2.png?alt=media&token=cba69781-3377-4e66-bd12-a95b9fad9a04)
+![](images/ngElementsComments.png)
 # NgElementComments:  Your own commenting system made with Angular Elements and Firebase
 
 No page views limits. You pay only for the firebase resources you use.🤩
 
-![](https://firebasestorage.googleapis.com/v0/b/element-comments-demo.appspot.com/o/Screenshot%202019-11-11%20at%209.55.10%20PM.png?alt=media&token=2ef0212c-0a4e-44ff-bca2-e2905d55b543)
+![](images/ngElementCommentsDemo.png)
 
 **Built with -**
 1. Firebase auth (For authentication)
@@ -14,7 +14,7 @@ No page views limits. You pay only for the firebase resources you use.🤩
 Firebase offers very cost effective pricing. It is really free to get started for small bloggers.
 
 ## Demo 
-https://codersloth.github.io/ngElementCommentsDemo/
+https://darshandevrai.github.io/ngElementCommentsDemo/
 
 ## How to build it 
 If you know Angular then dive into the code right away. Its very simple.
@@ -40,7 +40,7 @@ Create firebase account and new project . Add web app to the new project by clic
 
 You will get firebase configurations. Copy this config and paste it into src -> environments -> environments.ts and environment.prod.ts
 
-In firebase console go to Authentication and set up sign in. Enable google auth and add support email.
+In firebase console go to Authentication and set up sign in. Enable google auth and add support email. Add the domain that you are going to use in Authentication -> Settings -> Authorized domains.
 
 In firebase console, go to Database and create firestore database. Select test mode(Don’t worry about the security rules. We will override it) and next and select location. 
 
