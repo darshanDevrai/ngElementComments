@@ -1,9 +1,9 @@
-![](/images/ngElementsComments.png)
+![](images/ngElementsComments.png)
 # NgElementComments:  Your own commenting system made with Angular Elements and Firebase
 
 No page views limits. You pay only for the firebase resources you use.🤩
 
-![](/images/ngElementCommentsDemo.png)
+![](images/ngElementCommentsDemo.png)
 
 **Built with -**
 1. Firebase auth (For authentication)
