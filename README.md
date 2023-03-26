@@ -1,9 +1,9 @@
-![](images/ngElementsComments.png)
+![logo](https://firebasestorage.googleapis.com/v0/b/ng-element-comments.appspot.com/o/ngElementsComments.png?alt=media&token=6532560f-acc3-4f31-af3c-27d692f06fa5)
 # NgElementComments:  Your own commenting system made with Angular Elements and Firebase
 
 No page views limits. You pay only for the firebase resources you use.🤩
 
-![](images/ngElementCommentsDemo.png)
+![demo](https://firebasestorage.googleapis.com/v0/b/ng-element-comments.appspot.com/o/ngElementCommentsDemo.png?alt=media&token=69bea263-06e6-4bdf-bb0d-eccb81d6eb31)
 
 **Built with -**
 1. Firebase auth (For authentication)
